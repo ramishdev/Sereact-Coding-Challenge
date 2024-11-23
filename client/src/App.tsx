@@ -1,10 +1,10 @@
-import Counter from './components/Counter'
 import './App.css'
+import ThreeSphere from './components/ThreeSphere'
 
 export default function App() {
   return (
-    <div >
-      <Counter />
+    <div>
+      <ThreeSphere />
     </div>
   )
 }
