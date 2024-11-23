@@ -1,0 +1,26 @@
+{
+	"name": "server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "src/server.js",
+	"scripts": {
+		"build": "npx tsc",
+		"start": "node dist/server.js",
+		"dev": "nodemon src/server.ts"
+	},
+	"dependencies": {
+		"cors": "^2.8.5",
+		"express": "^4.21.1",
+		"morgan": "^1.10.0",
+		"nodemon": "^3.1.7"
+	},
+	"packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387",
+	"devDependencies": {
+		"@types/cors": "^2.8.17",
+		"@types/express": "4.17.21",
+		"@types/morgan": "^1.9.9",
+		"@types/node": "^22.9.2",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.7.2"
+	}
+}
