@@ -1,10 +1,13 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
-import morgan from 'morgan';
+import { WebSocketServer, WebSocket } from 'ws';
+import http from 'http';
+
+const PORT = 4000;
+
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(morgan('dev'))
 
 // Counter state
 let counter = 0;
@@ -40,7 +43,7 @@ const JsonRpcErrorCodes = {
 // Helper function to process a single JSON-RPC request
 function processRequest(request: JsonRpcRequest): JsonRpcResponse {
     const { method, params = {}, id } = request;
-    
+
     // Define the methods
     const methods: { [key: string]: () => number } = {
         increment: () => {
@@ -131,48 +134,56 @@ function validateRequest(request: JsonRpcRequest): boolean {
     return true;
 }
 
+// Create an HTTP server
+const server = http.createServer(app);
+
+// Create a WebSocket server
+const wss = new WebSocketServer({ server });
 
 // Endpoint to handle JSON-RPC requests
-app.post('/api', (req: Request, res: Response) => {
-    const body = req.body;
-    try {
-        // Validate the request
-        if (!validateRequest(body)) {
-            return res.status(400).json({
+wss.on('connection', (ws: WebSocket) => {
+    console.log('Client connected via WebSocket');
+
+    ws.on('message', (data) => {
+        try {
+            const message = data.toString();
+            const request = JSON.parse(message);
+
+            if (!validateRequest(request)) {
+                const errorResponse = {
+                    jsonrpc: '2.0',
+                    error: {
+                        code: JsonRpcErrorCodes.INVALID_REQUEST,
+                        message: 'Invalid Request',
+                    },
+                    id: request && request.id ? request.id : null,
+                };
+                ws.send(JSON.stringify(errorResponse));
+                return;
+            }
+            const response = processRequest(request);
+            if (response.id !== null) {
+                ws.send(JSON.stringify(response));
+            }
+        } catch (error) {
+            const errorResponse = {
                 jsonrpc: '2.0',
                 error: {
-                    code: JsonRpcErrorCodes.INVALID_REQUEST,
-                    message: 'Invalid Request',
+                    code: JsonRpcErrorCodes.PARSE_ERROR,
+                    message: 'Parse error',
                 },
-                id: body && body.id ? body.id : null,
-            });
+                id: null,
+            };
+            ws.send(JSON.stringify(errorResponse));
         }
+    });
 
-        // Process the request
-        const response = processRequest(body);
-
-        if (response.id === null) {
-            // Notification, do not send a response
-            res.status(204).send();
-        } else {
-            res.json(response);
-        }
-    } catch (error) {
-        // Parse error or internal error
-        res.status(400).json({
-            jsonrpc: '2.0',
-            error: {
-                code: JsonRpcErrorCodes.PARSE_ERROR,
-                message: 'Parse error',
-            },
-            id: null,
-        });
-    }
-
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
 });
 
 // Start the server
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-    console.log(`JSON-RPC server is running on port ${PORT}`);
+server.listen(PORT, () => {
+    console.log(`WebSocket server is running on port ${PORT}`);
 });
