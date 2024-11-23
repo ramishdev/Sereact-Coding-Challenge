@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/storeHooks';
 import { decrement, decrementByAmount, increment, incrementByAmount, reset, setAmount } from '../slices/counterSlice';
 
-const Counter: React.FC = () => {
+const Counter = () => {
   // Access the current count from the Redux store
   const count = useAppSelector((state) => state.counter.value);
   // Get the dispatch function
