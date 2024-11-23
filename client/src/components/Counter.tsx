@@ -30,6 +30,8 @@ const Counter: React.FC = () => {
       <div className="flex flex-col items-center gap-4">
         <input
           type="number"
+          min="0"
+          step="1"
           value={inputAmount}
           onChange={(e) => setInputAmount(Number(e.target.value))}
           className="w-24 px-2 py-1 border border-gray-400 rounded text-center"
