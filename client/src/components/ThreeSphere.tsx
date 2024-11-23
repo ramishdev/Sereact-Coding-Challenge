@@ -17,16 +17,17 @@ const ThreeSphere = () => {
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     const width = window.innerWidth / 2;
     const height = window.innerHeight / 2;
-    renderer.setSize(width, height);    if (mountRef.current) {
+    renderer.setSize(width, height);    
+    if (mountRef.current) {
       mountRef.current.appendChild(renderer.domElement);
     }
 
-    const geometry = new THREE.SphereGeometry(1, 32, 32); // Radius, width segments, height segments
+    const geometry = new THREE.SphereGeometry(1, 32, 32);
     const material = new THREE.MeshBasicMaterial({ color: 0x0077ff, wireframe: true });
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
 
-    camera.position.z = 5; // Move the camera away from the origin (default is at (0, 0, 0))
+    camera.position.z = 5; // Move the camera away from the origin
 
     // Animation loop
     const animate = () => {
