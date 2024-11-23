@@ -33,7 +33,7 @@ const Counter = () => {
           min="0"
           step="1"
           value={inputAmount}
-          onChange={(e) => setInputAmount(Number(e.target.value))}
+          onChange={(e) => Number(e.target.value) >= 0 && setInputAmount(Number(e.target.value))}
           className="w-24 px-2 py-1 border border-gray-400 rounded text-center"
           placeholder="Amount"
         />
