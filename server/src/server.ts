@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-
+import morgan from 'morgan';
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(morgan('dev'))
 
 // Counter state
 let counter = 0;
@@ -39,7 +40,7 @@ const JsonRpcErrorCodes = {
 // Helper function to process a single JSON-RPC request
 function processRequest(request: JsonRpcRequest): JsonRpcResponse {
     const { method, params = {}, id } = request;
-
+    
     // Define the methods
     const methods: { [key: string]: () => number } = {
         increment: () => {
@@ -59,6 +60,9 @@ function processRequest(request: JsonRpcRequest): JsonRpcResponse {
         },
         incrementByAmount: () => {
             const amount = params.amount;
+            if (amount === undefined) {
+                throw { code: JsonRpcErrorCodes.INVALID_PARAMS, message: 'Invalid params: amount is missing' };
+            }
             if (typeof amount !== 'number') {
                 throw { code: JsonRpcErrorCodes.INVALID_PARAMS, message: 'Invalid params: amount must be a number' };
             }
@@ -67,6 +71,9 @@ function processRequest(request: JsonRpcRequest): JsonRpcResponse {
         },
         decrementByAmount: () => {
             const amount = params.amount;
+            if (amount === undefined) {
+                throw { code: JsonRpcErrorCodes.INVALID_PARAMS, message: 'Invalid params: amount is missing' };
+            }
             if (typeof amount !== 'number') {
                 throw { code: JsonRpcErrorCodes.INVALID_PARAMS, message: 'Invalid params: amount must be a number' };
             }
@@ -75,6 +82,9 @@ function processRequest(request: JsonRpcRequest): JsonRpcResponse {
         },
         setAmount: () => {
             const amount = params.amount;
+            if (amount === undefined) {
+                throw { code: JsonRpcErrorCodes.INVALID_PARAMS, message: 'Invalid params: amount is missing' };
+            }
             if (typeof amount !== 'number') {
                 throw { code: JsonRpcErrorCodes.INVALID_PARAMS, message: 'Invalid params: amount must be a number' };
             }
