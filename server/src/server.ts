@@ -1,12 +1,13 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
-import morgan from 'morgan';
 import { WebSocketServer, WebSocket } from 'ws';
 import http from 'http';
+
+const PORT = 4000;
+
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(morgan('dev'))
 
 // Counter state
 let counter = 0;
@@ -183,7 +184,6 @@ wss.on('connection', (ws: WebSocket) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
     console.log(`WebSocket server is running on port ${PORT}`);
 });
