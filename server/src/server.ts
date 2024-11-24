@@ -12,6 +12,8 @@ app.use(express.json());
 // Counter state
 let counter = 0;
 
+// Radius state
+let sphereRadius = 1;
 // Define JSON-RPC interfaces
 interface JsonRpcRequest {
     jsonrpc: '2.0';
@@ -93,6 +95,24 @@ function processRequest(request: JsonRpcRequest): JsonRpcResponse {
             }
             counter = amount;
             return counter;
+        },
+        set_radius: () => {
+            const radius = params.radius;
+            if (radius === undefined) {
+                throw { code: JsonRpcErrorCodes.INVALID_PARAMS, message: 'Invalid params: radius is missing' };
+            }
+            if (typeof radius !== 'number' || radius <= 0) {
+                throw {
+                    code: JsonRpcErrorCodes.INVALID_PARAMS,
+                    message: 'Invalid params: radius must be a positive number',
+                };
+            }
+            sphereRadius = radius;
+            return sphereRadius;
+        },
+
+        get_radius: () => {
+            return sphereRadius;
         },
     };
 
