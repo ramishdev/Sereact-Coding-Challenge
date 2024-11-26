@@ -82,6 +82,7 @@ The project utilizes a branch-based workflow to manage the progressive implement
 - **`three-js-with-json-rpc-api`**: Implementation of `set_radius` and `get_radius` API methods to manage the sphere's radius.
 
 > **Note**: The `counter-app-with-redux` branch includes Tailwind CSS from the outset, eliminating the need for a separate branch dedicated to styling. 
+
 > **Note**: The `counter-app-with-redux` branch initially included Redux for state management. However, in subsequent branches, Redux was removed in favor of managing state directly through the backend via JSON-RPC over WebSockets. The `main` branch reflects this latest state without Redux.
 
 ---
